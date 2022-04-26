@@ -229,6 +229,8 @@ impl pallet_timestamp::Config for Runtime {
 parameter_types! {
 	pub const ExistentialDeposit: u128 = 500;
 	pub const MaxLocks: u32 = 50;
+	pub const MaxClaimLength:u32 = 30;
+	pub const KittyReserve: u64=1_000;
 }
 
 impl pallet_balances::Config for Runtime {
@@ -263,6 +265,11 @@ impl pallet_sudo::Config for Runtime {
 impl pallet_template::Config for Runtime {
 	type Event = Event;
 }
+impl pallet_poe::Config for Runtime {
+	type Event = Event;
+	type MaxClaimLength = MaxClaimLength;
+	type WeightInfo = pallet_poe::weights::SubstrateWeight<Runtime>;
+}
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
@@ -281,6 +288,7 @@ construct_runtime!(
 		Sudo: pallet_sudo::{Module, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the template pallet in the runtime.
 		TemplateModule: pallet_template::{Module, Call, Storage, Event<T>},
+		PoeModule: pallet_poe::{Module, Call, Storage, Event<T>},
 	}
 );
 
