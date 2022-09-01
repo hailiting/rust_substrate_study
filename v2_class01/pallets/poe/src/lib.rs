@@ -20,11 +20,13 @@ pub mod pallet {
 
 	#[pallet::pallet]
 	#[pallet::generate_store(pub(super) trait Store)]
-	pub struct Pallet<T>(_);
+	#[pallet::without_storage_info]
+	// pub struct Pallet<T>(_);
+	pub struct Pallet<T>(PhantomData<T>);
 	#[pallet::storage]
 	pub type Proofs<T:Config>=StorageMap<
-		_, 
-		Blake2_128Concat, 
+		_,
+		Blake2_128Concat,
 		BoundedVec<u8, T::MaxClaimLength>,
 		(T::AccountId, T::BlockNumber),
 		OptionQuery,
