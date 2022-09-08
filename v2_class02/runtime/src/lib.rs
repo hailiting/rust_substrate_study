@@ -270,6 +270,8 @@ impl pallet_kitties::Config for Runtime {
 	type Event = Event;
 	type Randomness = RandomnessCollectiveFlip;
 	type KittyIndex = u32;
+	type MoneyForCreateKitty = 10_000u128;
+	type Currency = Balance;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
