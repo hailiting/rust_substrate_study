@@ -36,9 +36,10 @@ pub mod pallet {
   #[pallet::generate_store(pub(super) trait Store)]
   pub struct Pallet<T>(_);
 
-  #[pallet::storage]
-  #[pallet::getter(fn next_kitty_id)]
-  pub type NextKittyId<T> = StorageMap<_, KittyIndex, ValueQuery, GetDefaultValue>;
+	#[pallet::storage]
+	#[pallet::getter(fn next_kitty_id)]
+	pub type NextKittyId<T> = StorageValue<_, KittyIndex, ValueQuery, GetDefaultValue>;
+
 
 
   #[pallet::storage]
@@ -74,7 +75,7 @@ pub mod pallet {
 
       Kitties::<T>::insert(kitty_id, &kitty);
       KittyOwner::<T>::insert(kitty_id, &who);
-      NextKittyId::<T>::Set(kitty_id+1);
+      NextKittyId::<T>::set(kitty_id+1);
       Self::deposit_event(Event::KittyCreated(who, kitty_id, kitty));
       Ok(())
     }
@@ -88,14 +89,14 @@ pub mod pallet {
       let kitty_id = Self::get_next_id().map_err(|_| Error::<T>::InvalidKittyId)?;
       let selector = Self::random_value(&who);
 
-      let mut data = [0u8, 16];
+      let mut data = [0u8; 16];
       for i in 0..kitty_1.0.len(){
         data[i] = (kitty_1.0[i] & selector[i]) | (kitty_2.0[i]&!selector[i]);
       }
       let new_kitty = Kitty(data);
       Kitties::<T>::insert(kitty_id, &new_kitty);
       KittyOwner::<T>::insert(kitty_id, &who);
-      NextKittyId::<T>::Set(kitty_id+1);
+      NextKittyId::<T>::set(kitty_id+1);
 
       Self::deposit_event(Event::KittyBreed(who, kitty_id, new_kitty));
       Ok(())
@@ -105,14 +106,14 @@ pub mod pallet {
       let who = ensure_signed(origin)?;
       Self::get_kitty(kitty_id).map_err(|_| Error::<T>::InvalidKittyId)?;
       ensure!(Self::kitty_owner(kitty_id)==Some(who.clone()), Error::<T>::NotOwner);
-      <KittyOwner<T>>::insert(kitty_id, new_owner);
+      <KittyOwner<T>>::insert(kitty_id, &new_owner);
       Self::deposit_event(Event::KittyTransfered(who, new_owner, kitty_id));
       Ok(())
     }
   }
 
   impl<T:Config> Pallet<T>{
-    fn random_value(&sender: T::AccountId)->[u8; 16] {
+    fn random_value(sender: &T::AccountId)->[u8; 16] {
       let payload = (
         T::Randomness::random_seed(),
         &sender,
@@ -127,7 +128,7 @@ pub mod pallet {
       }
     }
     fn get_kitty(kitty_id:KittyIndex)->Result<Kitty,()>{
-      match Self::Kitties(kitty_id){
+      match Self::kitties(kitty_id){
         Some(kitty)=>Ok(kitty),
         None=>Err(())
       }
