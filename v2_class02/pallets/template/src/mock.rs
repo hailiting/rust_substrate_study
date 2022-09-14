@@ -55,5 +55,6 @@ impl pallet_template::Config for Test {
 
 // Build genesis storage according to the mock runtime.
 pub fn new_test_ext() -> sp_io::TestExternalities {
+	// 基于内存的存储环境
 	system::GenesisConfig::default().build_storage::<Test>().unwrap().into()
 }

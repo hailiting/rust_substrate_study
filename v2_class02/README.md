@@ -34,8 +34,6 @@ transfer_after
 ![transfer_after](./img/transfer_after.png)
 transfer_InvalidKittyId
 ![transfer_InvalidKittyId](./img/transfer_InvalidKittyId.png)
-transfer_NotForSale
-![transfer_NotForSale](./img/transfer_NotForSale.png)
 transfer_NotOwner
 ![transfer_NotOwner](./img/transfer_NotOwner.png)
 
@@ -56,5 +54,4 @@ buy_after_ALICE_STASH
 ![buy_after_ALICE_STASH](./img/buy_after_ALICE_STASH.png)
 buy_after_ALICE
 ![buy_after_ALICE](./img/buy_after_ALICE.png)
-buy_NoEnoughBalance
-![buy_NoEnoughBalance](./img/buy_NoEnoughBalance.png)
+![bug_NoEnoughBalance](./img/buy_NoEnoughBalance.png)
